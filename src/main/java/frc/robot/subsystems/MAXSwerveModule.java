@@ -46,7 +46,7 @@ public class MAXSwerveModule {
     m_turningSparkMax.restoreFactoryDefaults();
 
     // Setup encoders and PID controllers for the driving and turning SPARKS MAX.
-    m_drivingEncoder = m_drivingSparkMax.getEncoder();
+    m_drivingEncoder = m_drivingSparkMax.getEncoder(); // TODO: SUPER IMPORTANT: this code uses the relative encoder for drive motors, and I don't think we have those hooked up
     m_turningEncoder = m_turningSparkMax.getAbsoluteEncoder(Type.kDutyCycle);
     m_drivingPIDController = m_drivingSparkMax.getPIDController();
     m_turningPIDController = m_turningSparkMax.getPIDController();

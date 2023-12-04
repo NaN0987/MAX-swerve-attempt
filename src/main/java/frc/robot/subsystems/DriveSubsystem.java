@@ -13,7 +13,14 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
-import edu.wpi.first.wpilibj.ADIS16470_IMU;
+//import edu.wpi.first.wpilibj.ADIS16470_IMU;
+//import edu.wpi.first.wpilibj.DriverStation;
+
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.SPI;
+/** 
+ * Both gyros implement the Gyro class, so they should theoretically work the same, but I don't know if the NavX is CW or CCW positive
+ */
 import frc.robot.Constants.DriveConstants;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -41,7 +48,16 @@ public class DriveSubsystem extends SubsystemBase {
       DriveConstants.kBackRightChassisAngularOffset);
 
   // The gyro sensor
-  private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
+  private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
+  
+  // Last year's code:
+  // try {
+  //     ahrs = new AHRS(SPI.Port.kMXP);
+  //     ahrs.enableLogging(true);
+  //   } 
+  //   catch (RuntimeException ex) {
+  //     DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
+  //   }
 
   // Slew rate filter variables for controlling lateral acceleration
   private double m_currentRotation = 0.0;
@@ -65,6 +81,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
+    m_gyro.enableLogging(true);
   }
 
   @Override
@@ -163,7 +180,8 @@ public class DriveSubsystem extends SubsystemBase {
       m_currentRotation = m_rotLimiter.calculate(rot);
 
 
-    } else {
+    } 
+    else {
       xSpeedCommanded = xSpeed;
       ySpeedCommanded = ySpeed;
       m_currentRotation = rot;
