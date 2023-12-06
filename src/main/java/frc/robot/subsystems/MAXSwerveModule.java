@@ -27,7 +27,7 @@ public class MAXSwerveModule {
   private final SparkMaxPIDController m_drivingPIDController;
   private final SparkMaxPIDController m_turningPIDController;
 
-  private double m_chassisAngularOffset = 0;
+  private final double m_chassisAngularOffset;
   private SwerveModuleState m_desiredState = new SwerveModuleState(0.0, new Rotation2d());
 
   /**

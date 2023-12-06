@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.SPI;
  */
 import frc.robot.Constants.DriveConstants;
 import frc.utils.SwerveUtils;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -82,6 +83,14 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     m_gyro.enableLogging(true);
+
+    // Shuffleboard values
+    Shuffleboard.getTab("Swerve").addDouble("Robot Heading", () -> getHeading());
+    
+    Shuffleboard.getTab("Swerve").addDouble("frontLeft angle", () -> m_frontLeft.getPosition().angle.getDegrees());
+    Shuffleboard.getTab("Swerve").addDouble("frontRight angle", () -> m_frontRight.getPosition().angle.getDegrees());
+    Shuffleboard.getTab("Swerve").addDouble("rearLeft angle", () -> m_rearLeft.getPosition().angle.getDegrees());
+    Shuffleboard.getTab("Swerve").addDouble("rearRight angle", () -> m_rearRight.getPosition().angle.getDegrees());
   }
 
   @Override
