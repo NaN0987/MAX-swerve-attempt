@@ -46,11 +46,10 @@ public final class Constants {
         new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
     // Angular offsets of the modules relative to the chassis in radians
-    // TODO: IMPORTANT: I dont understand why there's angle offset constants for the spin motors. If we can zero the absolute encoders then these shouldn't be necessary, right?
-    public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;
+    public static final double kFrontLeftChassisAngularOffset = 0;
     public static final double kFrontRightChassisAngularOffset = 0;
-    public static final double kBackLeftChassisAngularOffset = Math.PI;
-    public static final double kBackRightChassisAngularOffset = Math.PI / 2;
+    public static final double kBackLeftChassisAngularOffset = 0;
+    public static final double kBackRightChassisAngularOffset = 0;
 
     // SPARK MAX CAN IDs
     public static final int kFrontLeftDrivingCanId = 2;
@@ -63,7 +62,8 @@ public final class Constants {
     public static final int kFrontRightTurningCanId = 5;
     public static final int kRearRightTurningCanId = 7;
 
-    public static final boolean kGyroReversed = false;
+    // TODO: There is a known issue with this template where this constant doesn't actually work
+    public static final boolean kGyroReversed = true;
   }
 
   public static final class ModuleConstants {
@@ -74,8 +74,7 @@ public final class Constants {
 
     // Invert the turning encoder, since the output shaft rotates in the opposite direction of
     // the steering motor in the MAXSwerve Module.
-    //TODO: IMPORTANT: if our turning motors are inverted that could really fuck things up
-    public static final boolean kTurningEncoderInverted = true;
+    public static final boolean kTurningEncoderInverted = false;
 
     // Calculations required for driving motor conversion factors and feed forward
     public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
@@ -100,16 +99,23 @@ public final class Constants {
     public static final double kDrivingP = 0.04;
     public static final double kDrivingI = 0;
     public static final double kDrivingD = 0;
-    public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
+    //TODO: IMPORTANT: I don't know why there is a feedforward on the drive motors, but we need to figure out why and if it also applies to our robot.
+    public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps; 
     public static final double kDrivingMinOutput = -1;
     public static final double kDrivingMaxOutput = 1;
 
     public static final double kTurningP = 1;
     public static final double kTurningI = 0;
-    public static final double kTurningD = 0;
+    public static final double kTurningD = 0.05;
     public static final double kTurningFF = 0;
     public static final double kTurningMinOutput = -1;
     public static final double kTurningMaxOutput = 1;
+
+    //inversion of drive motors
+    public static final boolean kLeftFrontInverted = false;
+    public static final boolean kLeftRearInverted = false;
+    public static final boolean kRightFrontInverted = true;
+    public static final boolean kRightRearInverted = false;
 
     //TODO: Look into ways of chinging the idle mode for drive motors
     public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
@@ -117,7 +123,7 @@ public final class Constants {
 
     //TODO: Make sure the current limits aren't too high
     public static final int kDrivingMotorCurrentLimit = 40; // amps
-    public static final int kTurningMotorCurrentLimit = 40; // amps
+    public static final int kTurningMotorCurrentLimit = 20; // amps
   }
 
   public static final class OIConstants {
