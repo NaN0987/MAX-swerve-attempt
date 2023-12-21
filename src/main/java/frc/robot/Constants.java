@@ -61,9 +61,6 @@ public final class Constants {
     public static final int kRearLeftTurningCanId = 9;
     public static final int kFrontRightTurningCanId = 5;
     public static final int kRearRightTurningCanId = 7;
-
-    // TODO: There is a known issue with this template where this constant doesn't actually work
-    public static final boolean kGyroReversed = true;
   }
 
   public static final class ModuleConstants {
@@ -124,6 +121,19 @@ public final class Constants {
     //TODO: Make sure the current limits aren't too high
     public static final int kDrivingMotorCurrentLimit = 40; // amps
     public static final int kTurningMotorCurrentLimit = 20; // amps
+  }
+
+  public static final class HeadingConstants {
+    // TODO: There is a known issue with this template where this constant doesn't actually work
+    public static final boolean kGyroReversed = true;
+
+    // This is used for making the robot face a certain direction
+    public static final double kHeadingP = 0.01;
+    public static final double kHeadingI = 0;
+    public static final double kHeadingD = 0.001;
+    public static final double kHeadingMinOutput = -0.5;
+    public static final double kHeadingMaxOutput = 0.5;
+    public static final double kHeadingTolerance = 1;
   }
 
   public static final class OIConstants {

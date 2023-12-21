@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.SPI;
  * Both gyros implement the Gyro class, so they should theoretically work the same, but I don't know if the NavX is CW or CCW positive
  */
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.ModuleConstants;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -276,6 +277,6 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The turn rate of the robot, in degrees per second
    */
   public double getTurnRate() {
-    return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+    return m_gyro.getRate() * (HeadingConstants.kGyroReversed ? -1.0 : 1.0);
   }
 }
