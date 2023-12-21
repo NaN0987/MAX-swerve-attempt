@@ -19,6 +19,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.vision.AutoAlignBottom;
+import frc.robot.commands.vision.AutoAlignCircle;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -50,6 +51,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     m_visionSubsystem.setDefaultCommand(new DefaultLimelightPipeline(m_visionSubsystem));
+
 
     // Configure default commands
     m_robotDrive.setDefaultCommand(
@@ -90,6 +92,7 @@ public class RobotContainer {
     .toggleOnTrue(
         new AutoAlignBottom(m_visionSubsystem, m_robotDrive)
     );
+
   }
 
   /**
