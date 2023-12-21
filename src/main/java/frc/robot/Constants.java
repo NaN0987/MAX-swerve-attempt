@@ -149,4 +149,13 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
+  public static final class VisionConstants {
+    public static final double kTopPoleDesiredDistance = 51;
+    public static final double kDistanceTolerance = 2;
+    public static final double kMaxForwardSpeed = 0.7;
+    public static final double kForwardSpeedPConstant = 0.1;
+
+    public static final double kRotationSpeed = 0.6;
+    public static final double kRotationTolerance = 2;
+}
 }

@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.vision.AutoAlignBottom;
+import frc.robot.commands.vision.DefaultLimelightPipeline;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -25,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
+import frc.robot.subsystems.VisionSubsystem;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -38,6 +41,7 @@ public class RobotContainer {
 
   // The driver's controller
   final XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -45,6 +49,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+    m_visionSubsystem.setDefaultCommand(new DefaultLimelightPipeline(m_visionSubsystem));
 
     // Configure default commands
     m_robotDrive.setDefaultCommand(
@@ -79,6 +84,12 @@ public class RobotContainer {
         .onTrue(new InstantCommand(
             () -> m_robotDrive.zeroHeading(),
             m_robotDrive));
+    //Y button: auto aim (high pole) (i set it to be on a button press, not held)
+    
+    new JoystickButton(m_driverController, Button.kX.value)
+    .toggleOnTrue(
+        new AutoAlignBottom(m_visionSubsystem, m_robotDrive)
+    );
   }
 
   /**
