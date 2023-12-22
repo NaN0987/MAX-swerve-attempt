@@ -124,7 +124,6 @@ public final class Constants {
   }
 
   public static final class HeadingConstants {
-    // TODO: There is a known issue with this template where this constant doesn't actually work
     public static final boolean kGyroReversed = true;
 
     // This is used for making the robot face a certain direction
