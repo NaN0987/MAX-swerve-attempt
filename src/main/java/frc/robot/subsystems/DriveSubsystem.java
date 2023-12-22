@@ -263,6 +263,16 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
+   * Sets the robot's heading to a specific angle.
+   * 
+   * @param angle The angle to set the robot's heading to.
+   */
+  public void setHeading(double angle) {
+    //The angle adjustment may not be cleared by m_gyro.reset(). Double check in testing
+    m_gyro.setAngleAdjustment(angle-getHeading());
+  }
+
+  /**
    * Returns the heading of the robot.
    *
    * @return the robot's heading in degrees, from -180 to 180
