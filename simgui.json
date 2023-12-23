@@ -1,0 +1,61 @@
+{
+  "HALProvider": {
+    "Other Devices": {
+      "SPARK MAX [2]": {
+        "header": {
+          "open": true
+        }
+      },
+      "navX-Sensor[0]": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Field": "Field2d"
+    },
+    "windows": {
+      "/SmartDashboard/Field": {
+        "Robot": {
+          "length": 0.6348984241485596,
+          "width": 0.6196584105491638
+        },
+        "bottom": 544,
+        "height": 8.013679504394531,
+        "image": "C:\\Users\\noahn\\Documents\\GitHub\\MAX-swerve-attempt\\simFiles\\2023-field.png",
+        "left": 46,
+        "right": 1088,
+        "top": 36,
+        "traj": {
+          "arrows": false,
+          "style": "Line"
+        },
+        "units": "feet",
+        "width": 16.541748046875,
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
+    "Retained Values": {
+      "open": false
+    },
+    "transitory": {
+      "Shuffleboard": {
+        "Swerve": {
+          "open": true
+        },
+        "open": true
+      }
+    }
+  }
+}

@@ -7,20 +7,23 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.util.WPIUtilJNI;
-//import edu.wpi.first.wpilibj.ADIS16470_IMU;
-//import edu.wpi.first.wpilibj.DriverStation;
+
+import java.util.List;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
-/** 
- * Both gyros implement the Gyro class, so they should theoretically work the same, but I don't know if the NavX is CW or CCW positive
- */
+import frc.robot.Constants.AutoConstants;
+
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.ModuleConstants;
@@ -59,14 +62,7 @@ public class DriveSubsystem extends SubsystemBase {
   // The gyro sensor
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
   
-  // Last year's code:
-  // try {
-  //     ahrs = new AHRS(SPI.Port.kMXP);
-  //     ahrs.enableLogging(true);
-  //   } 
-  //   catch (RuntimeException ex) {
-  //     DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
-  //   }
+  // Note: the NavX takes a second to configure before it can be used. I have seen some teams create the gyro in a separate thread, which might be worth considering.
 
   // Slew rate filter variables for controlling lateral acceleration
   private double m_currentRotation = 0.0;
@@ -76,7 +72,8 @@ public class DriveSubsystem extends SubsystemBase {
   private SlewRateLimiter m_magLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
   private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
-  //private Field2d m_field = new Field2d();
+  //Field for simulation
+  private Field2d m_field = new Field2d();
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
@@ -100,7 +97,25 @@ public class DriveSubsystem extends SubsystemBase {
     Shuffleboard.getTab("Swerve").addDouble("frontRight angle", () -> m_frontRight.getPosition().angle.getDegrees());
     Shuffleboard.getTab("Swerve").addDouble("rearLeft angle", () -> m_rearLeft.getPosition().angle.getDegrees());
     Shuffleboard.getTab("Swerve").addDouble("rearRight angle", () -> m_rearRight.getPosition().angle.getDegrees());
-    //SmartDashboard.putData("Field", m_field);
+    SmartDashboard.putData("Field", m_field);
+    
+    TrajectoryConfig config = new TrajectoryConfig(
+        AutoConstants.kMaxSpeedMetersPerSecond,
+        AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+        // Add kinematics to ensure max speed is actually obeyed
+        .setKinematics(DriveConstants.kDriveKinematics);
+
+    // An example trajectory to follow. All units in meters.
+    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing the +X direction
+        new Pose2d(0, 0, new Rotation2d(0)),
+        // Pass through these two interior waypoints, making an 's' curve path
+        List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+        // End 3 meters straight ahead of where we started, facing forward
+        new Pose2d(3, 0, new Rotation2d(0)),
+        config);
+    
+    m_field.getObject("traj").setTrajectory(exampleTrajectory);
   }
 
   @Override
@@ -115,7 +130,7 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearRight.getPosition()
         });
     
-    //m_field.setRobotPose(getPose());
+    m_field.setRobotPose(getPose());
   }
 
   /**
