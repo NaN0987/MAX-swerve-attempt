@@ -37,6 +37,9 @@ public class DefaultLimelightPipeline extends CommandBase {
     //When not overridden, this function is blank.
     @Override
     public void initialize(){
+        if((int)m_visionSubsystem.getPipeline() != VisionConstants.kDefaultPipeline){
+            m_visionSubsystem.setPipeline(VisionConstants.kDefaultPipeline);
+        }
     }
 
     /*This function is called repeatedly when the schedueler's "run()" function is called.
@@ -44,9 +47,6 @@ public class DefaultLimelightPipeline extends CommandBase {
      */
     @Override
     public void execute(){
-        if((int)m_visionSubsystem.getPipeline() != 3){
-            m_visionSubsystem.setPipeline(3);
-        }
     }
 
     /*This function is called once when the command ends.

@@ -51,7 +51,7 @@ public class AutoAlignBottom extends CommandBase {
     @Override
     public void initialize(){
         //m_chassisSubsystem.setBrakeMode();
-        m_visionSubsystem.setPipeline(4);
+        m_visionSubsystem.setPipeline(VisionConstants.kReflectiveTapePipeline);
         m_complete = false;
     }
 

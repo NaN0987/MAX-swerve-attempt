@@ -114,7 +114,7 @@ public final class Constants {
     public static final boolean kRightFrontInverted = true;
     public static final boolean kRightRearInverted = false;
 
-    //TODO: Look into ways of chinging the idle mode for drive motors
+    //TODO: Look into ways of changing the idle mode for drive motors
     public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
@@ -158,6 +158,7 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
+
   public static final class VisionConstants {
     public static final double kTopPoleDesiredDistance = 51;
     public static final double kDistanceTolerance = 2;
@@ -166,5 +167,15 @@ public final class Constants {
 
     public static final double kRotationSpeed = 0.6;
     public static final double kRotationTolerance = 2;
-}
+
+    //Pipeline constants
+    public static final int kAprilTagPipeline = 0;
+    public static final int kReflectiveTapePipeline = 1;
+    public static final int kGamePiecePipeline = 2;
+
+    /* NOTE: the limelight starts with pipeline 0 by default, so we need to make sure we make that pipeline something 
+     * that doesn't use the green lights so we don't blind everybody.
+     */
+    public static final int kDefaultPipeline = kAprilTagPipeline;
+  }
 }

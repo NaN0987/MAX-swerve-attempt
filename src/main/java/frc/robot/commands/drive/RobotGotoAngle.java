@@ -30,7 +30,7 @@ public class RobotGotoAngle extends CommandBase {
     private final DoubleSupplier m_ySpeed;
 
     /** 
-     * Uses PID to make the robot rotate to a certain direction while still giving the driver controll over x and y movement.
+     * Uses PID to make the robot rotate to a certain direction while still giving the driver control over the translation of the robot.
      */
     public RobotGotoAngle(DriveSubsystem subsystem, double angle, DoubleSupplier xSpeed, DoubleSupplier ySpeed) {
         m_driveSubsystem = subsystem;

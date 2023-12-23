@@ -43,6 +43,7 @@ public class VisionSubsystem extends SubsystemBase {
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(pipeline);
     }
 
+    //TODO: why does this return a double???
     public double getPipeline(){
         return NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").getDouble(0);
     }
@@ -95,6 +96,6 @@ public class VisionSubsystem extends SubsystemBase {
 
         //calculate distance
         distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches)/Math.tan(angleToGoalRadians);
-        SmartDashboard.putNumber("Distance from limelight",distanceFromLimelightToGoalInches);
+        SmartDashboard.putNumber("Distance from limelight", distanceFromLimelightToGoalInches);
     }
 }
