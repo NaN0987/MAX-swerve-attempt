@@ -160,6 +160,17 @@ public final class Constants {
   }
 
   public static final class VisionConstants {
+
+    //How many degrees is your limelight rotated from perfectly vertical
+    public static final double kLimelightMountAngle = 4; //NOTE: we should really take into account the rotation of the robot using the pitch of the NavX - Noah
+
+    //Limelight lens height from floor in inches
+    public static final double kLimelightLensHeight = 28.5;
+
+    //Height of reflective tape poles in inches
+    public static final double kTopReflectiveTapeHeight = 43.5;
+    public static final double kBottomReflectiveTapeHeight = 24;
+
     public static final double kTopPoleDesiredDistance = 51;
     public static final double kDistanceTolerance = 2;
     public static final double kMaxForwardSpeed = 0.7;
@@ -169,6 +180,7 @@ public final class Constants {
     public static final double kRotationTolerance = 2;
 
     //Pipeline constants
+    //TODO: maybe turn this into an enum?
     public static final int kAprilTagPipeline = 0;
     public static final int kReflectiveTapePipeline = 1;
     public static final int kGamePiecePipeline = 2;
