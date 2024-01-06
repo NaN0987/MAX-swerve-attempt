@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.auton.TemplateAuton;
+import frc.robot.commands.drive.RobotGotoAngle;
 import frc.robot.commands.vision.AutoAlignBottom;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
 import frc.robot.subsystems.DriveSubsystem;
@@ -84,13 +85,15 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, Button.kB.value)
+
+    //Right bumper: puts drive into x mode
+    new JoystickButton(m_driverController, Button.kRightBumper.value)
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
     
-    // Button to set gyro to 0
-    new JoystickButton(m_driverController, Button.kA.value)
+    //Left bumper: sets gyro to 0 degrees
+    new JoystickButton(m_driverController, Button.kLeftBumper.value)
         .onTrue(new InstantCommand(
             () -> m_robotDrive.zeroHeading(),
             m_robotDrive));
@@ -100,6 +103,23 @@ public class RobotContainer {
         .toggleOnTrue(
             new AutoAlignBottom(m_visionSubsystem, m_robotDrive)
         );
+    
+    //A button: makes robot face 0 degrees
+    new JoystickButton(m_driverController, Button.kA.value)
+        .onTrue(
+            new RobotGotoAngle(
+              m_robotDrive,
+              0,
+              () -> m_driverController.getLeftY(),
+              () -> m_driverController.getLeftX()
+            )
+        );
+    
+    //B button: sets gyro to 90 degrees
+    new JoystickButton(m_driverController, Button.kB.value)
+        .onTrue(new InstantCommand(
+            () -> m_robotDrive.setHeading(90),
+            m_robotDrive));
   }
 
   /**
