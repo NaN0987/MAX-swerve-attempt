@@ -1,5 +1,4 @@
 package frc.robot.commands.drive;
-// TODO: make this file work
 /*
  * The template code does not have a function for setting the robot to face a certain way, so we're just gonna have to implement that
  * ourselves using the drive function, the getHeading function, and a pid controller that we'll have to tune.
