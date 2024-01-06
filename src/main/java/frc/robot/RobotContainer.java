@@ -66,10 +66,10 @@ public class RobotContainer {
             m_robotDrive));
     
     // This lets pathplanner identify our commands
-    NamedCommands.registerCommand("Auto Align", new AutoAlignBottom(m_visionSubsystem, m_robotDrive));
+    //NamedCommands.registerCommand("Auto Align", new AutoAlignBottom(m_visionSubsystem, m_robotDrive));
 
     m_autonChooser.setDefaultOption("Template Auton", new TemplateAuton(m_robotDrive));
-    m_autonChooser.addOption("Path Planner", new PathPlannerAuto("Example Auton"));
+    //m_autonChooser.addOption("Path Planner", new PathPlannerAuto("Example Auton"));
 
     // Put chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_autonChooser).withSize(2, 1)
@@ -102,9 +102,8 @@ public class RobotContainer {
     
     //Y button: auto aim (high pole) (i set it to be on a button press, not held)
     new JoystickButton(m_driverController, Button.kX.value)
-
         .toggleOnTrue(
-            new AutoAlignBottom(m_visionSubsystem, m_robotDrive)
+            new AutoAlignCircle(m_visionSubsystem, m_robotDrive)
         );
     
     //A button: makes robot face 0 degrees

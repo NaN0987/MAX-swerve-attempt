@@ -83,7 +83,7 @@ public class RobotGotoAngle extends CommandBase {
         m_driveSubsystem.drive(
             -MathUtil.applyDeadband(m_xSpeed.getAsDouble(), OIConstants.kDriveDeadband),
             -MathUtil.applyDeadband(m_ySpeed.getAsDouble(), OIConstants.kDriveDeadband),
-            -rotation,
+            rotation,
             true, true);
         
         if(pidController.atSetpoint()){

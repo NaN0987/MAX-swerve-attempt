@@ -51,7 +51,7 @@ public class AutoAlignCircle extends CommandBase {
     @Override
     public void initialize(){
         //m_chassisSubsystem.setBrakeMode();
-        m_visionSubsystem.setPipeline(4);
+        m_visionSubsystem.setPipeline(1);
         m_complete = false;
     }
 
@@ -68,10 +68,10 @@ public class AutoAlignCircle extends CommandBase {
         double orbitRadius = 50.0; // Adjust this value to control the orbit radius
 
         if (targets > 0) {
-            if (x+1 > VisionConstants.kRotationTolerance){
+            if (x > VisionConstants.kRotationTolerance){
                 rotate = VisionConstants.kRotationSpeed;//.6
             }
-            else if (x+1 < -VisionConstants.kRotationTolerance){
+            else if (x < -VisionConstants.kRotationTolerance){
                 rotate = -VisionConstants.kRotationSpeed;
             }
             // Calculate angle to target
@@ -90,10 +90,10 @@ public class AutoAlignCircle extends CommandBase {
             double forwardSpeed = orbitSpeed * errorY;
 
             // Drive the robot with orbit control
-            m_driveSubsystem.drive(forwardSpeed, crabCrawl, rotate, true, true);
+            m_driveSubsystem.drive(forwardSpeed, crabCrawl, rotate, false, true);
         } else {
             // No targets, stop the robot
-            m_driveSubsystem.drive(0, 0, 0, true, true);
+            m_driveSubsystem.drive(0, 0, 0, false, true);
         }
     }
 
