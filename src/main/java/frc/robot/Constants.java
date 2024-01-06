@@ -61,9 +61,6 @@ public final class Constants {
     public static final int kRearLeftTurningCanId = 9;
     public static final int kFrontRightTurningCanId = 5;
     public static final int kRearRightTurningCanId = 7;
-
-    // TODO: There is a known issue with this template where this constant doesn't actually work
-    public static final boolean kGyroReversed = true;
   }
 
   public static final class ModuleConstants {
@@ -117,13 +114,25 @@ public final class Constants {
     public static final boolean kRightFrontInverted = true;
     public static final boolean kRightRearInverted = false;
 
-    //TODO: Look into ways of chinging the idle mode for drive motors
+    //TODO: Look into ways of changing the idle mode for drive motors
     public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
     //TODO: Make sure the current limits aren't too high
     public static final int kDrivingMotorCurrentLimit = 40; // amps
     public static final int kTurningMotorCurrentLimit = 20; // amps
+  }
+
+  public static final class HeadingConstants {
+    public static final boolean kGyroReversed = true;
+
+    // This is used for making the robot face a certain direction
+    public static final double kHeadingP = 0.01;
+    public static final double kHeadingI = 0;
+    public static final double kHeadingD = 0.001;
+    public static final double kHeadingMinOutput = -0.5;
+    public static final double kHeadingMaxOutput = 0.5;
+    public static final double kHeadingTolerance = 1;
   }
 
   public static final class OIConstants {
@@ -149,7 +158,19 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
+
   public static final class VisionConstants {
+
+    //How many degrees is your limelight rotated from perfectly vertical
+    public static final double kLimelightMountAngle = 4; //NOTE: we should really take into account the rotation of the robot using the pitch of the NavX - Noah
+
+    //Limelight lens height from floor in inches
+    public static final double kLimelightLensHeight = 28.5;
+
+    //Height of reflective tape poles in inches
+    public static final double kTopReflectiveTapeHeight = 43.5;
+    public static final double kBottomReflectiveTapeHeight = 24;
+
     public static final double kTopPoleDesiredDistance = 51;
     public static final double kDistanceTolerance = 2;
     public static final double kMaxForwardSpeed = 0.7;
@@ -157,5 +178,16 @@ public final class Constants {
 
     public static final double kRotationSpeed = 0.6;
     public static final double kRotationTolerance = 2;
-}
+
+    //Pipeline constants
+    //TODO: maybe turn this into an enum?
+    public static final int kAprilTagPipeline = 0;
+    public static final int kReflectiveTapePipeline = 1;
+    public static final int kGamePiecePipeline = 2;
+
+    /* NOTE: the limelight starts with pipeline 0 by default, so we need to make sure we make that pipeline something 
+     * that doesn't use the green lights so we don't blind everybody.
+     */
+    public static final int kDefaultPipeline = kAprilTagPipeline;
+  }
 }

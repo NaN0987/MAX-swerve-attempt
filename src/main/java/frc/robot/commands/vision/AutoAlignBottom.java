@@ -51,7 +51,7 @@ public class AutoAlignBottom extends CommandBase {
     @Override
     public void initialize(){
         //m_chassisSubsystem.setBrakeMode();
-        m_visionSubsystem.setPipeline(4);
+        m_visionSubsystem.setPipeline(VisionConstants.kReflectiveTapePipeline);
         m_complete = false;
     }
 
@@ -85,13 +85,13 @@ public class AutoAlignBottom extends CommandBase {
             }
 
             //Move forwards/backwards
-            double distanceFromTarget = m_visionSubsystem.getDistance();
+            double distanceFromTarget = m_visionSubsystem.getReflectiveTapeDistance();
 
             //P controller for distance (fred)
             //forwardSpeed = (currentPosition - desiredPosition) * Pconstant
             if ((distanceFromTarget < VisionConstants.kTopPoleDesiredDistance - VisionConstants.kDistanceTolerance) 
             || (distanceFromTarget > VisionConstants.kTopPoleDesiredDistance + VisionConstants.kDistanceTolerance)){
-                forwardSpeed = (m_visionSubsystem.getDistance() - VisionConstants.kTopPoleDesiredDistance) * VisionConstants.kForwardSpeedPConstant;
+                forwardSpeed = (m_visionSubsystem.getReflectiveTapeDistance() - VisionConstants.kTopPoleDesiredDistance) * VisionConstants.kForwardSpeedPConstant;
             }
             else{
                 forwardSpeed = 0;
@@ -116,7 +116,7 @@ public class AutoAlignBottom extends CommandBase {
         SmartDashboard.putNumber("motor speed align forwardspeed", forwardSpeed);
         SmartDashboard.putNumber("motor speed align rotation", crabCrawl);
 
-        m_driveSubsystem.drive(forwardSpeed,crabCrawl,0,true, true);
+        m_driveSubsystem.drive(forwardSpeed, crabCrawl, 0, true, true);
   
     
         
