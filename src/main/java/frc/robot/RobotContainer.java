@@ -16,6 +16,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.auton.TemplateAuton;
 import frc.robot.commands.drive.RobotGotoAngle;
 import frc.robot.commands.vision.AutoAlignBottom;
+import frc.robot.commands.vision.AutoAlignCircle;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -50,6 +51,7 @@ public class RobotContainer {
     configureButtonBindings();
 
     m_visionSubsystem.setDefaultCommand(new DefaultLimelightPipeline(m_visionSubsystem));
+
 
     // Configure default commands
     m_robotDrive.setDefaultCommand(
@@ -100,6 +102,7 @@ public class RobotContainer {
     
     //Y button: auto aim (high pole) (i set it to be on a button press, not held)
     new JoystickButton(m_driverController, Button.kX.value)
+
         .toggleOnTrue(
             new AutoAlignBottom(m_visionSubsystem, m_robotDrive)
         );
