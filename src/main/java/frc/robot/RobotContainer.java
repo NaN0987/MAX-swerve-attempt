@@ -66,10 +66,10 @@ public class RobotContainer {
             m_robotDrive));
     
     // This lets pathplanner identify our commands
-    //NamedCommands.registerCommand("Auto Align", new AutoAlignBottom(m_visionSubsystem, m_robotDrive));
+    NamedCommands.registerCommand("Auto Align", new AutoAlignBottom(m_visionSubsystem, m_robotDrive));
 
     m_autonChooser.setDefaultOption("Template Auton", new TemplateAuton(m_robotDrive));
-    //m_autonChooser.addOption("Path Planner", new PathPlannerAuto("Example Auton"));
+    m_autonChooser.addOption("Path Planner", new PathPlannerAuto("Example Auton"));
 
     // Put chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_autonChooser).withSize(2, 1)

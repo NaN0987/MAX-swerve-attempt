@@ -32,7 +32,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
-  // Create MAXSwerveModules
+  // Create Swerve Modules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
       DriveConstants.kFrontLeftDrivingCanId,
       DriveConstants.kFrontLeftTurningCanId,
@@ -82,7 +82,8 @@ public class DriveSubsystem extends SubsystemBase {
           m_frontRight.getPosition(),
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()
-      });
+      }
+  );
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
@@ -97,22 +98,22 @@ public class DriveSubsystem extends SubsystemBase {
     Shuffleboard.getTab("Swerve").addDouble("rearRight angle", () -> m_rearRight.getPosition().angle.getDegrees());
     SmartDashboard.putData("Field", m_field);
     
-    // // Configure the AutoBuilder
-    // AutoBuilder.configureHolonomic(
-    //     this::getPose, // Robot pose supplier
-    //     this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
-    //     this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-    //     this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-    //     new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-    //         new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-    //         new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-    //         DriveConstants.kMaxSpeedMetersPerSecond, // Max module speed, in m/s
-    //         0.4, // Drive base radius in meters. Distance from robot center to furthest module.
-    //         new ReplanningConfig() // Default path replanning config. See the API for the options here
-    //     ),
-    //     this // Reference to this subsystem to set requirements
-    // );
-
+    // Configure the AutoBuilder
+    AutoBuilder.configureHolonomic(
+        this::getPose, // Robot pose supplier
+        this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+        this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+        new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+            new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+            new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+            DriveConstants.kMaxSpeedMetersPerSecond, // Max module speed, in m/s
+            // Using pythagoras's theorem to find distance from robot center to module
+            Math.hypot(DriveConstants.kTrackWidth / 2, DriveConstants.kWheelBase / 2), // Drive base radius in meters. Distance from robot center to furthest module.
+            new ReplanningConfig() // Default path replanning config. See the API for the options here
+        ),
+        this // Reference to this subsystem to set requirements
+    );
   }
 
   @Override
@@ -312,8 +313,8 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The robot-relative translational speeds
    */
   private ChassisSpeeds getRobotRelativeSpeeds(){
-    //TODO: implement this function
-    return new ChassisSpeeds();
+    // Uses forward kinematics to calculate the robot's speed given the states of the swerve modules.
+    return DriveConstants.kDriveKinematics.toChassisSpeeds(m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState());
   }
 
   /**
@@ -322,7 +323,11 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The robot-relative translational speeds
    */
   private void driveRobotRelative(ChassisSpeeds speeds){
-    //TODO: implement this function
-    drive(0, 0, 0, false, false);
+    // This takes the velocities and converts them into precentages (-1 to 1)
+    drive(speeds.vxMetersPerSecond / DriveConstants.kMaxSpeedMetersPerSecond, 
+          speeds.vyMetersPerSecond / DriveConstants.kMaxSpeedMetersPerSecond, 
+          speeds.omegaRadiansPerSecond / DriveConstants.kMaxAngularSpeed, 
+          false, 
+          false);
   }
 }
