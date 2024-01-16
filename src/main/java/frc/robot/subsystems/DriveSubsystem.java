@@ -112,6 +112,7 @@ public class DriveSubsystem extends SubsystemBase {
             Math.hypot(DriveConstants.kTrackWidth / 2, DriveConstants.kWheelBase / 2), // Drive base radius in meters. Distance from robot center to furthest module.
             new ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
+        () -> false, // Parameter for whether to invert the paths or not (set to false for now)
         this // Reference to this subsystem to set requirements
     );
   }
