@@ -1,4 +1,5 @@
 package frc.robot.commands.vision;
+import java.util.Timer;
 
 import frc.robot.subsystems.DriveSubsystem;
 //json imports
@@ -8,6 +9,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import java.io.FileReader;
 import java.io.IOException;
+
 //Import subsystem(s) this command interacts with below
 
 import frc.robot.subsystems.VisionSubsystem;
@@ -42,6 +44,7 @@ public class MIDIMotor extends CommandBase {
     private boolean m_complete = false;
     private static final int MOTOR_CAN_ID = 1; // Replace with your actual CAN ID
     private static final double MAX_SPEED = 1.0; // Maximum motor speed
+    
 
     private CANSparkMax motor;
     //Class Constructor
@@ -69,32 +72,31 @@ public class MIDIMotor extends CommandBase {
     public void initialize(){
         //m_chassisSubsystem.setBrakeMode();
         m_complete = false;
-
+        long currentTimeMillis = System.currentTimeMillis();
+    }
+    /*This function is called repeatedly when the schedueler's "run()" function is called.
+     * Once you want the function to end, you should set m_complete to true.
+     */
+    @Override
+    public void execute(){
         // Path to the JSON file
         String filePath = "src/main/deploy/midi/grouped_notes_with_speed.json";
-
         try {
             // Parse the JSON file
             JSONParser parser = new JSONParser();
             JSONArray jsonArray = (JSONArray) parser.parse(new FileReader(filePath));
 
             // Iterate through the array and print values
+            //create something to track the ammount of time passed, and then when the note is at the certain time, run the motor until the note is no longer at that time
             for (Object arrayElement : jsonArray) {
                 JSONObject jsonObject = (JSONObject) arrayElement;
                 System.out.println("Note: " + jsonObject.get("Note") + ", Speed: " + jsonObject.get("Speed"));
+                //motor.set(MAX_SPEED);
             }
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
-    }
-
-    /*This function is called repeatedly when the schedueler's "run()" function is called.
-     * Once you want the function to end, you should set m_complete to true.
-     */
-    @Override
-    public void execute(){
     
-  
     
         
     }
