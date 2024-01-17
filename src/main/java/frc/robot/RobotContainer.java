@@ -101,8 +101,7 @@ public class RobotContainer {
             m_robotDrive));
     
     //Y button: auto aim (high pole) (i set it to be on a button press, not held)
-    new JoystickButton(m_driverController, Button.kX.value)
-
+    new JoystickButton(m_driverController, Button.kY.value)
         .toggleOnTrue(
             new AutoAlignBottom(m_visionSubsystem, m_robotDrive)
         );
@@ -117,13 +116,13 @@ public class RobotContainer {
               () -> m_driverController.getLeftX()
             )
         );
-    
     //B button: sets gyro to 90 degrees
     new JoystickButton(m_driverController, Button.kB.value)
         .onTrue(new InstantCommand(
             () -> m_robotDrive.setHeading(90),
             m_robotDrive));
   }
+  
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
