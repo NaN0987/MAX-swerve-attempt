@@ -8,6 +8,8 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -71,6 +73,8 @@ public class RobotContainer {
     m_autonChooser.setDefaultOption("Template Auton", new TemplateAuton(m_robotDrive));
     m_autonChooser.addOption("Path Planner", new PathPlannerAuto("Example Auton"));
 
+    Shuffleboard.getTab("Swerve").add("reset pose", new InstantCommand(this::resetPose));
+
     // Put chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_autonChooser).withSize(2, 1)
       .withProperties(Map.of("Title", "Auton Command"));
@@ -101,9 +105,10 @@ public class RobotContainer {
             m_robotDrive));
     
     //Y button: auto aim (high pole) (i set it to be on a button press, not held)
+
     new JoystickButton(m_driverController, Button.kY.value)
         .toggleOnTrue(
-            new AutoAlignBottom(m_visionSubsystem, m_robotDrive)
+            new AutoAlignCircle(m_visionSubsystem, m_robotDrive)
         );
     
     //A button: makes robot face 0 degrees
@@ -123,6 +128,13 @@ public class RobotContainer {
             m_robotDrive));
   }
   
+
+
+  public void resetPose(){
+    m_robotDrive.resetOdometry(
+        new Pose2d(0, 0, new Rotation2d(0))
+    );
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

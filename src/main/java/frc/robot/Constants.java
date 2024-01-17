@@ -27,7 +27,7 @@ public final class Constants {
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 4.8;
+    public static final double kMaxSpeedMetersPerSecond = 5;
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     public static final double kDirectionSlewRate = 1.2; // radians per second
@@ -67,18 +67,21 @@ public final class Constants {
     // The MAXSwerve module can be configured with one of three pinion gears: 12T, 13T, or 14T.
     // This changes the drive speed of the module (a pinion gear with more teeth will result in a
     // robot that drives faster).
-    public static final int kDrivingMotorPinionTeeth = 14; //done
+    //public static final int kDrivingMotorPinionTeeth = 14; //done
 
-    // Invert the turning encoder, since the output shaft rotates in the opposite direction of
-    // the steering motor in the MAXSwerve Module.
+    // Inverts the turning encoder.
     public static final boolean kTurningEncoderInverted = false;
 
     // Calculations required for driving motor conversion factors and feed forward
     public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
     public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
     public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
+
     // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the bevel pinion
-    public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
+    //public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
+
+    // The L1 MK4 and MK4i modules have a gear ratio of 8.14:1 on the drive wheels.
+    public static final double kDrivingMotorReduction = 8.14;
     public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
         / kDrivingMotorReduction;
 
@@ -103,7 +106,7 @@ public final class Constants {
 
     public static final double kTurningP = 1;
     public static final double kTurningI = 0;
-    public static final double kTurningD = 0.05;
+    public static final double kTurningD = 0;
     public static final double kTurningFF = 0;
     public static final double kTurningMinOutput = -1;
     public static final double kTurningMaxOutput = 1;
@@ -114,7 +117,6 @@ public final class Constants {
     public static final boolean kRightFrontInverted = true;
     public static final boolean kRightRearInverted = false;
 
-    //TODO: Look into ways of changing the idle mode for drive motors
     public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
@@ -127,7 +129,7 @@ public final class Constants {
     public static final boolean kGyroReversed = true;
 
     // This is used for making the robot face a certain direction
-    public static final double kHeadingP = 0.01;
+    public static final double kHeadingP = 0.05;
     public static final double kHeadingI = 0;
     public static final double kHeadingD = 0.001;
     public static final double kHeadingMinOutput = -0.5;
@@ -180,7 +182,6 @@ public final class Constants {
     public static final double kRotationTolerance = 2;
 
     //Pipeline constants
-    //TODO: maybe turn this into an enum?
     public static final int kAprilTagPipeline = 0;
     public static final int kReflectiveTapePipeline = 3;
     public static final int kGamePiecePipeline = 2;

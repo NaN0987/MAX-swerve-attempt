@@ -32,26 +32,26 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
-  // Create MAXSwerveModules
-  private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
+  // Create Swerve Modules
+  private final SwerveModule m_frontLeft = new SwerveModule(
       DriveConstants.kFrontLeftDrivingCanId,
       DriveConstants.kFrontLeftTurningCanId,
       DriveConstants.kFrontLeftChassisAngularOffset,
       ModuleConstants.kLeftFrontInverted);
 
-  private final MAXSwerveModule m_frontRight = new MAXSwerveModule(
+  private final SwerveModule m_frontRight = new SwerveModule(
       DriveConstants.kFrontRightDrivingCanId,
       DriveConstants.kFrontRightTurningCanId,
       DriveConstants.kFrontRightChassisAngularOffset,
       ModuleConstants.kRightFrontInverted);
 
-  private final MAXSwerveModule m_rearLeft = new MAXSwerveModule(
+  private final SwerveModule m_rearLeft = new SwerveModule(
       DriveConstants.kRearLeftDrivingCanId,
       DriveConstants.kRearLeftTurningCanId,
       DriveConstants.kBackLeftChassisAngularOffset,
       ModuleConstants.kLeftRearInverted);
 
-  private final MAXSwerveModule m_rearRight = new MAXSwerveModule(
+  private final SwerveModule m_rearRight = new SwerveModule(
       DriveConstants.kRearRightDrivingCanId,
       DriveConstants.kRearRightTurningCanId,
       DriveConstants.kBackRightChassisAngularOffset,
@@ -82,7 +82,8 @@ public class DriveSubsystem extends SubsystemBase {
           m_frontRight.getPosition(),
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()
-      });
+      }
+  );
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
@@ -107,12 +108,13 @@ public class DriveSubsystem extends SubsystemBase {
             new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
             new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
             DriveConstants.kMaxSpeedMetersPerSecond, // Max module speed, in m/s
-            0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+            // Using pythagoras's theorem to find distance from robot center to module
+            Math.hypot(DriveConstants.kTrackWidth / 2, DriveConstants.kWheelBase / 2), // Drive base radius in meters. Distance from robot center to furthest module.
             new ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
-        null, this // Reference to this subsystem to set requirements
+        () -> false, // Parameter for whether to invert the paths or not (set to false for now)
+        this // Reference to this subsystem to set requirements
     );
-
   }
 
   @Override
@@ -312,8 +314,8 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The robot-relative translational speeds
    */
   private ChassisSpeeds getRobotRelativeSpeeds(){
-    //TODO: implement this function
-    return new ChassisSpeeds();
+    // Uses forward kinematics to calculate the robot's speed given the states of the swerve modules.
+    return DriveConstants.kDriveKinematics.toChassisSpeeds(m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState());
   }
 
   /**
@@ -322,7 +324,11 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The robot-relative translational speeds
    */
   private void driveRobotRelative(ChassisSpeeds speeds){
-    //TODO: implement this function
-    drive(0, 0, 0, false, false);
+    // This takes the velocities and converts them into precentages (-1 to 1)
+    drive(speeds.vxMetersPerSecond / DriveConstants.kMaxSpeedMetersPerSecond, 
+          speeds.vyMetersPerSecond / DriveConstants.kMaxSpeedMetersPerSecond, 
+          speeds.omegaRadiansPerSecond / DriveConstants.kMaxAngularSpeed, 
+          false, 
+          false);
   }
 }

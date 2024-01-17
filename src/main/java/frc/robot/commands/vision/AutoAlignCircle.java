@@ -51,7 +51,9 @@ public class AutoAlignCircle extends CommandBase {
     @Override
     public void initialize(){
         //m_chassisSubsystem.setBrakeMode();
+
         m_visionSubsystem.setPipeline(3);
+
         m_complete = false;
     }
 
@@ -68,26 +70,26 @@ public class AutoAlignCircle extends CommandBase {
         double distanceFromTarget = m_visionSubsystem.getReflectiveTapeDistance();
 
         if (targets > 0) {
-            if (x+1 > VisionConstants.kRotationTolerance){
-                rotate = VisionConstants.kRotationSpeed;//.2
+            if (x > VisionConstants.kRotationTolerance){
+                rotate = VisionConstants.kRotationSpeed;//.6
             }
-            else if (x+1 < -VisionConstants.kRotationTolerance){
+            else if (x < -VisionConstants.kRotationTolerance){
                 rotate = -VisionConstants.kRotationSpeed;
             }
 
             double forwardSpeed = distanceController.calculate(distanceFromTarget);
 
             // Drive the robot with orbit control
-
             m_driveSubsystem.drive(
                 forwardSpeed*.2, 
                 orbitSpeed, 
                 rotate, 
                 true, 
                 true);
+
         } else {
             // No targets, stop the robot
-            m_driveSubsystem.drive(0, 0, 0, true, true);
+            m_driveSubsystem.drive(0, 0, 0, false, true);
         }
     }
 
