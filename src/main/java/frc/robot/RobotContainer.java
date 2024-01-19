@@ -68,17 +68,17 @@ public class RobotContainer {
             m_robotDrive));
     
     // This lets pathplanner identify our commands
-    NamedCommands.registerCommand("Auto Align", new AutoAlignBottom(m_visionSubsystem, m_robotDrive));
+    // NamedCommands.registerCommand("Auto Align", new AutoAlignBottom(m_visionSubsystem, m_robotDrive));
 
     m_autonChooser.setDefaultOption("Template Auton", new TemplateAuton(m_robotDrive));
-    m_autonChooser.addOption("Path Planner", new PathPlannerAuto("Example Auton"));
+    // m_autonChooser.addOption("Path Planner", new PathPlannerAuto("Example Auton"));
 
-    Shuffleboard.getTab("Swerve").add("reset pose", new InstantCommand(this::resetPose));
-
-    // Put chooser on the dashboard
+    // // Put chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_autonChooser).withSize(2, 1)
       .withProperties(Map.of("Title", "Auton Command"));
 
+    // DEBUG: shuffleboard widget for resetting pose. For now I'm using a default pose of 0, 0 and a rotation of 0
+    Shuffleboard.getTab("Swerve").add("reset pose", new InstantCommand(this::resetPose));
   }
 
   /**
@@ -127,8 +127,6 @@ public class RobotContainer {
             () -> m_robotDrive.setHeading(90),
             m_robotDrive));
   }
-  
-
 
   public void resetPose(){
     m_robotDrive.resetOdometry(

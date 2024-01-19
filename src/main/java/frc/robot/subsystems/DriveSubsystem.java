@@ -27,7 +27,6 @@ import frc.robot.Constants.ModuleConstants;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -81,16 +80,17 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
+    // NOTE: is this really necessary??
     m_gyro.enableLogging(true);
 
     // Shuffleboard values
     Shuffleboard.getTab("Swerve").addDouble("Robot Heading", () -> getHeading());
     
-    Shuffleboard.getTab("Swerve").addDouble("frontLeft angle", () -> m_frontLeft.getPosition().angle.getDegrees());
-    Shuffleboard.getTab("Swerve").addDouble("frontRight angle", () -> m_frontRight.getPosition().angle.getDegrees());
-    Shuffleboard.getTab("Swerve").addDouble("rearLeft angle", () -> m_rearLeft.getPosition().angle.getDegrees());
-    Shuffleboard.getTab("Swerve").addDouble("rearRight angle", () -> m_rearRight.getPosition().angle.getDegrees());
-    SmartDashboard.putData("Field", m_field);
+    Shuffleboard.getTab("Swerve").addDouble("frontLeft angle", () -> SwerveUtils.angleConstrain(m_frontLeft.getPosition().angle.getDegrees()));
+    Shuffleboard.getTab("Swerve").addDouble("frontRight angle", () -> SwerveUtils.angleConstrain(m_frontRight.getPosition().angle.getDegrees()));
+    Shuffleboard.getTab("Swerve").addDouble("rearLeft angle", () -> SwerveUtils.angleConstrain(m_rearLeft.getPosition().angle.getDegrees()));
+    Shuffleboard.getTab("Swerve").addDouble("rearRight angle", () -> SwerveUtils.angleConstrain(m_rearRight.getPosition().angle.getDegrees()));
+    Shuffleboard.getTab("Swerve").add("Field", m_field);
     
     // Configure the AutoBuilder
     AutoBuilder.configureHolonomic(
@@ -123,6 +123,7 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearRight.getPosition()
         });
     
+    // Update field widget
     m_field.setRobotPose(getPose());
   }
 
@@ -136,7 +137,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Resets the odometry to the specified pose.
+   * Resets the odometry to the specified pose. Note: this also resets the angle of the robot.
    *
    * @param pose The pose to which to set the odometry.
    */
@@ -170,9 +171,9 @@ public class DriveSubsystem extends SubsystemBase {
     rot *= DriveConstants.kMaxAngularSpeed;
 
     // Get the target chassis speeds relative to the robot
-    final ChassisSpeeds vel = ( fieldRelative ?
-      ChassisSpeeds.fromFieldRelativeSpeeds( xSpeed, ySpeed, rot, Rotation2d.fromDegrees(m_gyro.getAngle()) )
-        : new ChassisSpeeds( xSpeed, ySpeed, rot )
+    final ChassisSpeeds vel = (fieldRelative ?
+      ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(m_gyro.getAngle()))
+        : new ChassisSpeeds(xSpeed, ySpeed, rot)
     );
 
     // Rate limit if applicable
@@ -180,9 +181,12 @@ public class DriveSubsystem extends SubsystemBase {
       final double
         currentTime = WPIUtilJNI.now() * 1e-6,
         elapsedTime = currentTime - m_prevTime;
+
       SwerveUtils.RateLimitVelocity(
         vel, m_prevTarget, elapsedTime,
-        DriveConstants.kMagnitudeSlewRate, DriveConstants.kRotationalSlewRate);
+        DriveConstants.kMagnitudeSlewRate, DriveConstants.kRotationalSlewRate
+      );
+
       m_prevTime = currentTime;
       m_prevTarget = vel;
     }
