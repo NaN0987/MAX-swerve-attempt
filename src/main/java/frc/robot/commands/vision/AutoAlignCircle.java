@@ -35,7 +35,7 @@ public class AutoAlignCircle extends CommandBase {
         //If your command interacts with any subsystem(s), you should pass them into "addRequirements()"
         //This function makes it so your command will only run once these subsystem(s) are free from other commands.
         //This is really important as it will stop scenarios where two commands try to controll a motor at the same time.
-        addRequirements(m_visionSubsystem);
+        addRequirements(m_visionSubsystem, m_driveSubsystem);
     }
 
 
@@ -52,7 +52,7 @@ public class AutoAlignCircle extends CommandBase {
     public void initialize(){
         //m_chassisSubsystem.setBrakeMode();
 
-        m_visionSubsystem.setPipeline(3);
+        m_visionSubsystem.setPipeline(VisionConstants.kReflectiveTapePipeline);
 
         m_complete = false;
     }

@@ -9,7 +9,8 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import java.io.FileReader;
 import java.io.IOException;
-
+import java.util.List;
+import java.util.Map;
 //Import subsystem(s) this command interacts with below
 
 import frc.robot.subsystems.VisionSubsystem;
@@ -24,7 +25,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.SerialPort;
 
 import edu.wpi.first.math.controller.PIDController;
-
+import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.Filesystem;
 
 
@@ -35,7 +36,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class MIDIMotor extends CommandBase {
-
+    private double m_prevTime = WPIUtilJNI.now() * 1e-6;
     //Import any instance variables that are passed into the file below here, such as the subsystem(s) your command interacts with.
     final DriveSubsystem m_driveSubsystem;
     final PIDController distanceController = new PIDController(.2, 0, 0.05);
@@ -48,13 +49,13 @@ public class MIDIMotor extends CommandBase {
 
     private CANSparkMax motor;
     //Class Constructor
-    public MIDIMotor(VisionSubsystem visionSubsystem, DriveSubsystem driveSubsystem){
+    public MIDIMotor(DriveSubsystem driveSubsystem){
         m_driveSubsystem = driveSubsystem;
         motor = new CANSparkMax(MOTOR_CAN_ID, MotorType.kBrushless);
         //If your command interacts with any subsystem(s), you should pass them into "addRequirements()"
         //This function makes it so your command will only run once these subsystem(s) are free from other commands.
-        //This is really important as it will stop scenarios where two commands try to controll a motor at the same time.
-
+        //This is reaaddRequirements(m_visionSubsystem, m_driveSubsystem);
+        addRequirements(m_driveSubsystem);
     }
 
 
@@ -72,30 +73,37 @@ public class MIDIMotor extends CommandBase {
     public void initialize(){
         //m_chassisSubsystem.setBrakeMode();
         m_complete = false;
-        long currentTimeMillis = System.currentTimeMillis();
+
+
+        //m_prevTime = currentTime;
     }
     /*This function is called repeatedly when the schedueler's "run()" function is called.
      * Once you want the function to end, you should set m_complete to true.
      */
     @Override
     public void execute(){
-        // Path to the JSON file
-        String filePath = "src/main/deploy/midi/grouped_notes_with_speed.json";
-        try {
-            // Parse the JSON file
-            JSONParser parser = new JSONParser();
-            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader(filePath));
-
-            // Iterate through the array and print values
-            //create something to track the ammount of time passed, and then when the note is at the certain time, run the motor until the note is no longer at that time
-            for (Object arrayElement : jsonArray) {
-                JSONObject jsonObject = (JSONObject) arrayElement;
-                System.out.println("Note: " + jsonObject.get("Note") + ", Speed: " + jsonObject.get("Speed"));
-                //motor.set(MAX_SPEED);
+        double currentTime = WPIUtilJNI.now() * 1e-6;
+        double elapsedTime = currentTime - m_prevTime;
+        //Path to the JSON file
+        //getting json files this way might not work, guide to fix: https://docs.wpilib.org/en/latest/docs/software/pathplanning/pathweaver/integrating-robot-program.html
+        List<Map<String, Object>> notesList = parseJson(jsonString);
+            
+        for (Map<String, Object> note : notesList) {
+            double startTime = (double) note.get("Start Time");
+            List<Map<String, Object>> notesDataList = (List<Map<String, Object>>) note.get("0");
+            
+            for (Map<String, Object> noteData : notesDataList) {
+                String noteType = (String) noteData.get("Note");
+                double speed = (double) noteData.get("Speed");
+                
+                // Use startTime, noteType, and speed as needed
+                System.out.println("Start Time: " + startTime + ", Note: " + noteType + ", Speed: " + speed);
             }
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
         }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
     
     
         

@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.auton.TemplateAuton;
 import frc.robot.commands.drive.RobotGotoAngle;
+import frc.robot.commands.vision.AutoAlignAutoAim;
 import frc.robot.commands.vision.AutoAlignBottom;
 import frc.robot.commands.vision.AutoAlignCircle;
 import frc.robot.commands.vision.DefaultLimelightPipeline;
@@ -68,16 +69,16 @@ public class RobotContainer {
             m_robotDrive));
     
     // This lets pathplanner identify our commands
-    NamedCommands.registerCommand("Auto Align", new AutoAlignBottom(m_visionSubsystem, m_robotDrive));
+   // NamedCommands.registerCommand("Auto Align", new AutoAlignBottom(m_visionSubsystem, m_robotDrive));
 
-    m_autonChooser.setDefaultOption("Template Auton", new TemplateAuton(m_robotDrive));
-    m_autonChooser.addOption("Path Planner", new PathPlannerAuto("Example Auton"));
+  //   m_autonChooser.setDefaultOption("Template Auton", new TemplateAuton(m_robotDrive));
+  //   m_autonChooser.addOption("Path Planner", new PathPlannerAuto("Move One Meter"));
 
-    Shuffleboard.getTab("Swerve").add("reset pose", new InstantCommand(this::resetPose));
+  //   Shuffleboard.getTab("Swerve").add("reset pose", new InstantCommand(this::resetPose));
 
-    // Put chooser on the dashboard
-    Shuffleboard.getTab("Autonomous").add(m_autonChooser).withSize(2, 1)
-      .withProperties(Map.of("Title", "Auton Command"));
+  //   // Put chooser on the dashboard
+  // Shuffleboard.getTab("Autonomous").add(m_autonChooser).withSize(2, 1)
+  //     .withProperties(Map.of("Title", "Auton Command"));
 
   }
 
@@ -108,7 +109,7 @@ public class RobotContainer {
 
     new JoystickButton(m_driverController, Button.kY.value)
         .toggleOnTrue(
-            new AutoAlignCircle(m_visionSubsystem, m_robotDrive)
+            new AutoAlignAutoAim(m_visionSubsystem, m_robotDrive)
         );
     
     //A button: makes robot face 0 degrees

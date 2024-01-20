@@ -182,13 +182,13 @@ public final class Constants {
     public static final double kRotationTolerance = 2;
 
     //Pipeline constants
-    public static final int kAprilTagPipeline = 0;
+    public static final int kAprilTagPipeline = 1;
     public static final int kReflectiveTapePipeline = 3;
-    public static final int kGamePiecePipeline = 2;
+    public static final int kGamePiecePipeline = 4;
 
     /* NOTE: the limelight starts with pipeline 0 by default, so we need to make sure we make that pipeline something 
      * that doesn't use the green lights so we don't blind everybody.
      */
-    public static final int kDefaultPipeline = kAprilTagPipeline;
+    public static final int kDefaultPipeline = 0;
   }
 }
