@@ -1,15 +1,15 @@
 package frc.robot.commands.vision;
 import java.util.Timer;
-
+import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
 //json imports
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+
 import java.io.FileReader;
-import java.io.IOException;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 //Import subsystem(s) this command interacts with below
 
@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.nio.file.Path;
 
-import javax.sound.midi.*;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -43,15 +42,22 @@ public class MIDIMotor extends CommandBase {
 
     //If you want to contoll whether or not the command has ended, you should store it in some sort of variable:
     private boolean m_complete = false;
-    private static final int MOTOR_CAN_ID = 1; // Replace with your actual CAN ID
-    private static final double MAX_SPEED = 1.0; // Maximum motor speed
     
+    private Map<String, CANSparkMax> noteMotors;
 
     private CANSparkMax motor;
     //Class Constructor
     public MIDIMotor(DriveSubsystem driveSubsystem){
         m_driveSubsystem = driveSubsystem;
-        motor = new CANSparkMax(MOTOR_CAN_ID, MotorType.kBrushless);
+        noteMotors = new HashMap<>();
+        noteMotors.put("motor1", new CANSparkMax(DriveConstants.kFrontRightDrivingCanId, MotorType.kBrushless));  // Replace with actual CAN ID
+        noteMotors.put("motor2", new CANSparkMax(DriveConstants.kFrontRightTurningCanId, MotorType.kBrushless));  // Replace with actual CAN ID
+        noteMotors.put("motor3", new CANSparkMax(DriveConstants.kFrontLeftDrivingCanId, MotorType.kBrushless));  // Replace with actual CAN ID
+        noteMotors.put("motor4", new CANSparkMax(DriveConstants.kFrontLeftTurningCanId, MotorType.kBrushless));  // Replace with actual CAN ID
+        noteMotors.put("motor5", new CANSparkMax(DriveConstants.kRearLeftDrivingCanId, MotorType.kBrushless));  // Replace with actual CAN ID
+        noteMotors.put("motor6", new CANSparkMax(DriveConstants.kRearLeftTurningCanId, MotorType.kBrushless));  // Replace with actual CAN ID
+        noteMotors.put("motor7", new CANSparkMax(DriveConstants.kRearRightDrivingCanId, MotorType.kBrushless));  // Replace with actual CAN ID
+        noteMotors.put("motor8", new CANSparkMax(DriveConstants.kRearRightTurningCanId, MotorType.kBrushless));  // Replace with actual CAN ID
         //If your command interacts with any subsystem(s), you should pass them into "addRequirements()"
         //This function makes it so your command will only run once these subsystem(s) are free from other commands.
         //This is reaaddRequirements(m_visionSubsystem, m_driveSubsystem);
@@ -86,28 +92,55 @@ public class MIDIMotor extends CommandBase {
         double elapsedTime = currentTime - m_prevTime;
         //Path to the JSON file
         //getting json files this way might not work, guide to fix: https://docs.wpilib.org/en/latest/docs/software/pathplanning/pathweaver/integrating-robot-program.html
-        List<Map<String, Object>> notesList = parseJson(jsonString);
-            
-        for (Map<String, Object> note : notesList) {
-            double startTime = (double) note.get("Start Time");
-            List<Map<String, Object>> notesDataList = (List<Map<String, Object>>) note.get("0");
-            
-            for (Map<String, Object> noteData : notesDataList) {
+
+       try {
+        // parsing file "your_data.json"
+        Object obj = new JSONParser().parse(new FileReader("src/main/deploy/midi/grouped_notes_with_speed.json"));
+
+        // typecasting obj to JSONArray
+        JSONArray notesArray = (JSONArray) obj;
+
+        // iterating over notesArray
+        Iterator<?> iterator = notesArray.iterator();
+        while (iterator.hasNext()) {
+            double ammountOfInUseMotors = 0;
+            JSONObject noteEntry = (JSONObject) iterator.next();
+
+            // Getting Start Time
+            double startTime = (double) noteEntry.get("Start Time");
+            System.out.println("Start Time: " + startTime);
+
+            // Getting notes array
+            JSONArray notesArrayData = (JSONArray) noteEntry.get("0");
+
+            // iterating over notesArrayData
+            Iterator<?> dataIterator = notesArrayData.iterator();
+            while (dataIterator.hasNext()) {
+                ammountOfInUseMotors++;
+                JSONObject noteData = (JSONObject) dataIterator.next();
                 String noteType = (String) noteData.get("Note");
                 double speed = (double) noteData.get("Speed");
-                
+
                 // Use startTime, noteType, and speed as needed
-                System.out.println("Start Time: " + startTime + ", Note: " + noteType + ", Speed: " + speed);
+                System.out.println("Note: " + noteType + ", Speed: " + speed);
+                int motorIndex = (int) ammountOfInUseMotors - 1;
+                if (speed >= elapsedTime && speed <= elapsedTime +.25 && ammountOfInUseMotors != 9){
+                    CANSparkMax assignedMotor = noteMotors.get("motor" + motorIndex);
+                    if (assignedMotor != null) {
+                        assignedMotor.set(speed);
+                    }
+                }
             }
         }
     } catch (Exception e) {
         e.printStackTrace();
+        System.err.println("Error reading or parsing the JSON file.");
     }
 }
     
     
         
-    }
+    
 
     /*This function is called once when the command ends.
      * A command ends either when you tell it to end with the "isFinished()" function below, or when it is interupted.
