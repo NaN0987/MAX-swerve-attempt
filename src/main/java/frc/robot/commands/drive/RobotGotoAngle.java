@@ -4,7 +4,7 @@ package frc.robot.commands.drive;
  * ourselves using the drive function, the getHeading function, and a pid controller that we'll have to tune.
  */
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
 import java.util.function.DoubleSupplier;
 
@@ -14,7 +14,7 @@ import frc.robot.Constants.HeadingConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class RobotGotoAngle extends CommandBase {
+public class RobotGotoAngle extends Command {
 
     private final DriveSubsystem m_driveSubsystem;
 

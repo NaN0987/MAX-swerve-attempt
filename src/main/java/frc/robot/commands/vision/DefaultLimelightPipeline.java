@@ -7,9 +7,9 @@ import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.Constants.VisionConstants;
 
 //Import this so you can make this class a command
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
-public class DefaultLimelightPipeline extends CommandBase {
+public class DefaultLimelightPipeline extends Command {
 
     //Import any instance variables that are passed into the file below here, such as the subsystem(s) your command interacts with.
     final VisionSubsystem m_visionSubsystem;

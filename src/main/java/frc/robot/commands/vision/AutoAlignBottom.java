@@ -11,9 +11,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.VisionConstants;
 
 //Import this so you can make this class a command
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
-public class AutoAlignBottom extends CommandBase {
+public class AutoAlignBottom extends Command {
 
     //Import any instance variables that are passed into the file below here, such as the subsystem(s) your command interacts with.
     final VisionSubsystem m_visionSubsystem;

@@ -52,8 +52,8 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
+    // Configure limelight default pipeline
     m_visionSubsystem.setDefaultCommand(new DefaultLimelightPipeline(m_visionSubsystem));
-
 
     // Configure default commands
     m_robotDrive.setDefaultCommand(

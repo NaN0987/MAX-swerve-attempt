@@ -20,7 +20,7 @@ import java.nio.file.Path;
 import javax.sound.midi.*;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.SerialPort;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -32,9 +32,9 @@ import edu.wpi.first.wpilibj.Filesystem;
 
 
 //Import this so you can make this class a command
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 
-public class MIDIMotor extends CommandBase {
+public class MIDIMotor extends Command {
 
     //Import any instance variables that are passed into the file below here, such as the subsystem(s) your command interacts with.
     final DriveSubsystem m_driveSubsystem;
